@@ -24,7 +24,7 @@ runs:
         echo "downloading from: $url"
 
         curl --user-agent "cargo-quickinstall client (alsuren@gmail.com)" \
-          --location --silent --show-error --fail "$url"
+          --location --silent --show-error --fail --output "$tarball" "$url"
 
         tar xf $tarball
         rm $tarball
