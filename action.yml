@@ -1,0 +1,37 @@
+name: "Install Tarpaulin"
+description: "Install tarpaulin for rust test coverage"
+author: "FNNDSC"
+
+inputs:
+  version:
+    description: tarpaulin version
+    required: false
+    default: '0.23.1'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install tarpaulin
+      shell: bash
+      run: |
+        cd /tmp
+        host_target="$(rustc -vV | sed -n 's|host: ||p')"
+        echo "host: $host_target"
+        
+        release_name="cargo-tarpaulin-${{ inputs.version }}-$host_target"
+        tarball="$release_name.tar.gz"
+        url="https://github.com/cargo-bins/cargo-quickinstall/releases/download/$release_name/$tarball"
+        echo "downloading from: $url"
+
+        curl --user-agent "cargo-quickinstall client (alsuren@gmail.com)" \
+          --location --silent --show-error --fail "$url"
+
+        tar xf $tarball
+        rm $tarball
+        mv -v cargo-tarpaulin ~/.cargo/bin/cargo-tarpaulin
+
+        cargo tarpaulin --version
+
+branding:
+  color: "orange"
+  icon: "umbrella"
